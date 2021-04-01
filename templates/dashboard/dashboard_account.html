@@ -1,0 +1,127 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block content %}
+<div class="container ml-5 col-lg-12 col-md-12 col-xs-12">
+  <div class="w-90 mx-auto pl-5 pt-5">
+    <span class="h2 pt-2 pb-3">Account Settings</span>
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a class="nav-item nav-link active" id="nav-update-password" data-toggle="tab" href="#nav-password" role="tab" aria-controls="nav-password" aria-selected="true">Update Password</a>
+        <a class="nav-item nav-link" id="nav-disable-account" data-toggle="tab" href="#nav-disable" role="tab" aria-controls="nav-disable" aria-selected="false">Disable Account</a>
+      </div>
+    </nav>
+    <br />
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-password" role="tabpanel" aria-labelledby="nav-update-password">
+        <form action="{{ url_for('update_password') }}" method="post" novalidate>
+          {{ password_form.hidden_tag() }}
+          <div class="row pb-3">
+            <div class="col-6 text-right">{{ password_form.username.label }}</div>
+            <div class="col-2"><input class="form-control" type="text" value="{{ current_user.get_username() }}" disabled /></div>
+          </div>
+          <div class="row pb-3">
+            <div class="col-6 text-right">{{ password_form.current_password.label }}</div>
+            <div class="col-2">{{ password_form.current_password(class_='form-control') }}</div>
+          </div>
+          <div class="row pb-3">
+            <div class="col-6 text-right">{{ password_form.new_password.label }}</div>
+            <div class="col-2">{{ password_form.new_password(class_='form-control') }}</div>
+          </div>
+          <div class="row pb-3">
+            <div class="col-6 text-right">{{ password_form.confirm_new_password.label }}</div>
+            <div class="col-2">{{ password_form.confirm_new_password(class_='form-control') }}</div>
+          </div>
+          <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2">{{ password_form.update_password_submit(class='main-btn btn btn-secondary btn-block') }}</div>
+            <div class="col-2"><a href="{{ url_for('dashboard') }}" class="main-btn btn btn-default btn-block">Cancel</a></div>
+            <div class="col-4"></div>
+          </div>
+        </form>
+      </div>
+      <div class="tab-pane fade" id="nav-disable" role="tabpanel" aria-labelledby="nav-disable-account">
+        <form action="{{ url_for('disable_account' )}}" method="post" novalidate>
+          {% if 'csrf_token' in disable_form %}
+          {{ disable_form.csrf_token(id = "unique_id") }}
+          {% endif %}
+          <div class="row pb-3">
+            <div class="col-6 text-right">{{ disable_form.username.label }}</div>
+            <div class="col-2"><input class="form-control" type="text" value="{{ current_user.get_username() }}" disabled /></div>
+          </div>
+          <div class="row pb-3">
+            <div class="col-6 text-right">{{ disable_form.current_password.label }}</div>
+            <div class="col-2">{{ disable_form.current_password(class_='form-control', id='disable_acc_current_password') }}</div>
+          </div>
+          <div class="row pb-3">
+            <div class="col-6 text-right">{{ disable_form.disable_account.label }}</div>
+            <div class="col-2">
+              <div class="row mx-md-n3">
+                <div class="col pt-md-1">
+                  <div class="custom-control custom-switch">
+                    {% if status %}
+                    <input type="checkbox" class="custom-control-input" id="disable_acc_switch" name='disable_account'>
+                    {% else %}
+                    <input type="checkbox" class="custom-control-input" id="disable_acc_switch" name='disable_account' checked>
+                    {% endif %}
+                    <label class="custom-control-label" for="disable_acc_switch"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4"></div>
+            <div class="col-2">{{ disable_form.disable_acc_submit(class='main-btn btn btn-secondary btn-block', id='disable_acc_submit') }}</div>
+            <div class="col-2"><a href="{{ url_for('dashboard') }}" class="main-btn btn btn-default btn-block">Cancel</a></div>
+            <div class="col-4"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      <div class="col-4"></div>
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="col-4">
+        {% if category == 'success' %}
+        <div class="alert alert-success"><p class="text-center">{{ message }}</p> </div>
+        {% elif category == 'error' %}
+        <div class="alert alert-danger"><p class="text-center">{{ message }}</p> </div>
+          {% if not current_user.get_active_status() %}
+            <meta http-equiv = "refresh" content = "5; url ={{ url_for('logout') }}" />
+          {% endif %}
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      {% if password_form.errors %}
+      {% for error in password_form.current_password.errors %}
+      <div class="col-4">
+        <div class="alert alert-danger"><p class="text-center">{{ error }}</p></div>
+      </div>
+      {% endfor %}
+      {% for error in password_form.confirm_new_password.errors %}
+      <div class="col-4">
+        <div class="alert alert-danger"><p class="text-center">{{ error }}</p></div>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% if disable_form.errors %}
+      {% for error in disable_form.current_password.errors %}
+      <div class="col-4">
+        <div class="alert alert-danger"><p class="text-center">{{ error }}</p></div>
+      </div>
+      {% endfor %}
+      {% for error in disable_form.confirm_new_password.errors %}
+      <div class="col-4">
+        <div class="alert alert-danger"><p class="text-center">{{ error }}</p></div>
+      </div>
+      {% endfor %}
+      {% endif %}
+      <div class="col-4"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

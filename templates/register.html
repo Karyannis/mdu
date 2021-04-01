@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "navbar.html" %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login_reg_style.css') }}">
+<div class="main-container pt-5">
+  <div class="sub-container w-25 p-4 mb-5 round-radius">
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-center animated fadeIn">
+        <div class="login-existing">
+          <a class="main-btn" href="{{ url_for('login') }}">Login to existing Account</a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-center mt-3 mb-2 animated fadeIn">
+        <div class="h5 text-md font-weight-bold">Or</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-center mb-2 animated fadeIn">
+        <div class="h4">Create a New Account</div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="row mt-2 mb-2 justify-content-center">
+          <div class="col-xs-6 purple-border">
+            {{ form.username(size=35, class='form-control text-center', maxlength=16) }}
+          </div>
+        </div>
+        <div class="row mt-2 mb-2 justify-content-center">
+          <div class="col-xs-6 purple-border">
+            {{ form.password(size=35, class='form-control text-center')}}
+          </div>
+        </div>
+        <div class="row mt-2 mb-2 justify-content-center">
+          <div class="col-xs-6 purple-border">
+            {{ form.confirm_password(size=35, class='form-control text-center') }}
+          </div>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="row mt-2 mb-2 justify-content-center">
+                <div class="alert alert-danger"> {{ message }} </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% if form.errors %}
+          {% for error in form.confirm_password.errors %}
+          <div class="row justify-content-center">
+            <div class="alert alert-danger">{{ error }}</div>
+          </div>
+          {% endfor %}
+          {% for error in form.agreement.errors %}
+          <div class="row justify-content-center">
+            <div class="alert alert-danger">{{ error }}</div>
+          </div>
+          {% endfor %}
+        {% endif %}
+        <div class="row justify-content-center mt-2 mb-2">
+          {{ form.recaptcha }}
+        </div>
+        <div class="row mt-2 mb-2 justify-content-center">
+          <div class="col-9 purple-border justify-content-center">
+            {{ form.agreement() }} When creating a new account, you agree to our
+            <a href="{{ url_for('tos') }}">terms of services</a> and
+            <a href="{{ url_for('privacy') }}"> privacy policy</a>.
+          </div>
+        </div>
+        <div class="row justify-content-center mt-2 mb-2">
+          {{ form.submit(class='main-btn w-75') }}
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id="particles-2" class="particles"></div>
+</div>
+
+<!-- JQuery to replace hrefs in navbar to index#<section> -->
+<script>
+    $("#home-nav").attr("href", "{{url_for('index') }}");
+    $("#feature-nav").attr("href", "{{url_for('index') }}#features");
+    $("#about-nav").attr("href", "{{url_for('index') }}#about");
+    $("#facts-nav").attr("href", "{{url_for('index') }}#facts");
+    $("#footer-nav").attr("href", "{{url_for('index') }}#footer");
+    $('a[name="login"]').remove();
+
+    // navbar
+    $('.navbar-area').addClass('sticky');
+    $(".navbar .navbar-brand img").attr("src", "/static/icons/logo_word_black.svg");
+</script>
+{% endblock %}

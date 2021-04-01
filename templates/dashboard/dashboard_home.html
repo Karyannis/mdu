@@ -1,0 +1,184 @@
+{% extends "dashboard/dashboard_base.html" %}
+{% block content %}
+<div class="container mt-4 ml-5 col-lg-12 col-md-12 col-xs-12">
+  <div class="row">
+    <div class="col-12">
+      <span class="h2 pb-4">Dashboard</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card proj-progress-card">
+        <div class="card-body bg-c-email">
+          <div class="row align-items-center">
+            <div class="col-8">Active Email Addresses</div>
+            <div class="col-4 text-right detection-num">
+              <div id="email-active"></div>
+            </div>
+          </div>
+          <progress id="active-progress-bar" value="0" max="0"></progress>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card bg-c-today">
+        <div class="card-body">
+          Today's Detection
+          <div class="row align-items-center">
+            <div class="col-8">
+              <i class="lni lni-envelope lni-32 lni-color"></i>
+            </div>
+            <div id="today-detected" class="col-4 text-right detection-num">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-c-weekly">
+        <div class="card-body">
+          Weekly Detection
+          <div class="row align-items-center">
+            <div class="col-8">
+              <i class="lni lni-envelope lni-32 lni-color"></i>
+            </div>
+            <div id="weekly-detected" class="col-4 text-right detection-num">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-c-monthly">
+        <div class="card-body">
+          Monthly Detection
+          <div class="row align-items-center">
+            <div class="col-8">
+              <i class="lni lni-envelope lni-32 lni-color"></i>
+            </div>
+            <div id="monthly-detected" class="col-4 text-right detection-num">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-c-all">
+        <div class="card-body">
+          All Time Detection
+          <div class="row align-items-center">
+            <div class="col-8">
+              <i class="lni lni-envelope lni-32 lni-color"></i>
+            </div>
+            <div id="all-time-detected" class="col-4 text-right detection-num">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body h5 pb-3">Monthly Overview</div>
+        <div class="chart-area">
+          <canvas id="overview" class="chart-canvas" width="1000" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // -- Bar chart START
+  var ctx = document.getElementById("overview");
+  var monthly_stats = {{ monthly_stats }}
+  var dates = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  var overview = new Chart(ctx, {
+    type: "bar",
+    options: {
+      legend: {
+        display: false
+      },
+      scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true,
+                stepSize: 1
+            }
+        }]
+      }
+    },
+    data: {
+      labels: dates,
+      datasets: [
+      {
+        data: monthly_stats,
+        backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor:  [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 2,
+        barThickness: 6,
+        maxBarThickness: 8,
+        minBarLength: 4,
+      }
+      ],
+    }
+  });
+  // -- Bar Chart END
+
+  // Card values
+  var email_active = {{ statistics['email_active'] }}
+  var email_stats =  {{ statistics['email_stats'] }}
+  var all_time_detected = {{ statistics['all_time'] }}
+  var monthly_detected = {{ statistics['monthly'] }}
+  var weekly_detected = {{ statistics['weekly'] }}
+  var today_detected = {{ statistics['today'] }}
+
+  $("#email-active").text(email_active);
+  $("#active-progress-bar").attr('value', email_active);
+  $("#active-progress-bar").attr('max', email_stats);
+
+  // All Time detection
+  $("#all-time-detected").text(all_time_detected);
+  // Today detection
+  $("#today-detected").text(today_detected);
+  // Weekly detection
+  $("#weekly-detected").text(weekly_detected);
+  // Monthly detection
+  $("#monthly-detected").text(monthly_detected);
+
+  // Monthly Overview
+
+</script>
+{% endblock %}

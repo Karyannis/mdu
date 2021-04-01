@@ -1,0 +1,42 @@
+{% include "base.html" %}
+<html class="no-js" lang="en">
+<head>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/dash_style.css') }}">
+</head>
+<body>
+	<!-- Page Content -->
+	<div class="row">
+		<div class="col-12 col-md-1">
+			<div id="user-panel" class="sidepanel">
+				<div class="login-user">
+					<img src="{{ url_for('static', filename='icons/logo.svg') }}" alt='Logo' width=40%>
+					<p class="login-user">{{ session['username'] }}</p>
+				</div>
+				<a href="{{ url_for('index') }}" class="list-group-item list-group-item-action bg-light text-left lni lni-home pt-4 pb-4">
+					<span class="pl-2 poppins">Home</span>
+				</a>
+				<a href="{{ url_for('dashboard') }}" class="list-group-item list-group-item-action bg-light text-left lni lni-layout pt-4 pb-4">
+					<span class="pl-2 poppins">Dashboard</span>
+				</a>
+				<a href="{{ url_for('dash_email') }}" class="list-group-item list-group-item-action bg-light text-left lni lni-envelope pt-4 pb-4">
+					<span class="pl-2 poppins">Subscription(s)</span>
+				</a>
+				<a href="{{ url_for('dash_account') }}" class="list-group-item list-group-item-action bg-light text-left lni lni-cog pt-4 pb-4">
+					<span class="pl-2 poppins">Account Settings</span>
+				</a>
+				<a href="{{ url_for('logout') }}" class="list-group-item list-group-item-action bg-light text-left lni lni-power-switch pt-4 pb-4">
+					<span class="pl-2 poppins">Logout</span>
+				</a>
+			</div>
+		</div>
+		<div class="col-12 col-md-10">
+			<div class="container-fluid ml-5 pl-5 pt-5">
+				{% block content %}{% endblock %}
+			</div>
+		</div>
+		<div class="col-12 col-md-1"></div>
+	</div>
+	<div id="particles-2" class="particles"></div>
+</body>
+</div>
+</html>
